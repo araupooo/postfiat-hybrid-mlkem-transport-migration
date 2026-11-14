@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hybrid ML-KEM Transport Migration Assessment</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2em auto; padding: 0 1em; line-height: 1.5; }
+table { border-collapse: collapse; margin: 1em 0; }
+th, td { border: 1px solid #bbb; padding: 0.35em 0.6em; text-align: left; font-size: 0.9em; }
+th { background: #eee; }
+pre { background: #f6f6f6; padding: 1em; overflow-x: auto; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<h1>Hybrid ML-KEM Transport Migration Assessment</h1>
+<p>Assessment of migrating the PFTL peer-to-peer overlay transport to
+hybrid classical-plus-ML-KEM key exchange, for the pinned postfiatd tree
+<code>0085a1ff885d6a446369cf73a4430f75af22be55</code>: a gap analysis of
+what the tree actually contains on the transport key-exchange path,
+reproducible local-fixture handshake benchmarks (hybrid
+X25519+ML-KEM-512/768/1024 against the classical X25519 baseline), a
+negotiation and downgrade analysis, and a key-compromise response and
+rollback plan. Local fixtures only; no live-network testing, no mutation
+of the pinned tree.</p>
+<p><strong>Headline finding.</strong> The pinned tree has no key-exchange
+primitive at all on the transport path (F-01): peer TLS uses an anonymous
+context with an ephemeral self-signed RSA certificate and
+<code>verify_none</code>, authentication happens at the application layer
+via a secp256k1 session signature bound to the TLS Finished messages, and
+there is no TLS group/curve configuration anywhere — so there is no hook
+point where a hybrid group could be selected today. A migration must add
+the KEM, the negotiation, and the key storage; it cannot reuse the node
+identity (always secp256k1) as a KEM key. The measured cost is small: the
+hybrid handshake was roughly 1.2-1.7x the classical one across repeated
+runs on the build machine (exact figures for this run:
+<code>results/timing_measurements.txt</code>).
+No Critical or High finding.</p>
+<h2>Headline numbers</h2>
+<table>
+<tr><th>Measure</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Harness checks</td><td>33 total — 33 passed, 0 failed (27 tested)</td><td>results/checks/</td></tr>
+<tr><td>Hybrid handshake, all parameter sets</td><td>under the 20x bound vs classical (K23)</td><td>exact figures: results/timing_measurements.txt</td></tr><tr><td>Classical handshake (X25519, component sum)</td><td>baseline for the ratios (K22)</td><td>exact figures: results/timing_measurements.txt</td></tr>
+<tr><td>Hybrid public key / ciphertext, ML-KEM-768</td><td>1,216 / 1,120 bytes</td><td>vs 32 / 32 bytes classical</td></tr>
+<tr><td>Highest severity</td><td>Medium (F-01: no key exchange in the pinned tree)</td><td>see Findings</td></tr>
+</table>
+<h2>Findings</h2>
+<table>
+<tr><th>ID</th><th>Severity</th><th>Status</th><th>Finding</th><th>Checks</th></tr>
+<tr><td>F-01</td><td>Medium</td><td>CONFIRMED</td><td>No key-exchange primitive exists on the transport path: peer TLS uses an anonymous context with an ephemeral self-signed RSA certificate and verify_none, and no TLS group/curve/KEM configuration exists anywhere</td><td>K02, K03, K04, K06, K07, K08</td></tr>
+<tr><td>F-02</td><td>Medium</td><td>CONFIRMED</td><td>Node identity is secp256k1-only and cannot serve as a KEM key; the session-signature binding (TLS Finished messages signed with the node key) is secp256k1-only</td><td>K09, K10, K11</td></tr>
+<tr><td>F-03</td><td>Low</td><td>CONFIRMED</td><td>No KEM key storage or configuration exists; a new config section and a key-storage format are fresh design decisions</td><td>K12, K13, K32, K33</td></tr>
+<tr><td>F-04</td><td>Low</td><td>CONFIRMED</td><td>Hybrid wire overhead is 25x/37x/49x (public key) and 24x/34x/49x (ciphertext) vs classical; a hybrid handshake carries ~1.2–1.6 KB of key material per direction</td><td>K18</td></tr>
+<tr><td>F-05</td><td>Low</td><td>CONFIRMED</td><td>The negotiation model has no exact-parameter policy knob: require-hybrid accepts ML-KEM-512 and ML-KEM-1024 as well as ML-KEM-768; pinning 768 exactly needs an additional rule</td><td>K30</td></tr>
+<tr><td>F-06</td><td>Informational</td><td>CONFIRMED</td><td>Hybrid handshake cost is roughly 1.2-1.7x the classical handshake across repeated runs on the build machine; the ML-KEM operations add only ~0.04-0.09 ms on top of the X25519 baseline, and the HKDF combiner is negligible</td><td>K19, K20, K21, K22, K23</td></tr>
+<tr><td>F-07</td><td>Informational</td><td>CONFIRMED</td><td>Timing figures are machine-dependent; only the parameter-set orderings and the 20x ratio bound are asserted, so the harness passes on any reasonable machine</td><td>K19, K20, K21, K22, K23</td></tr>
+<tr><td>F-08</td><td>Informational</td><td>CONFIRMED</td><td>The negotiation/downgrade analysis is a deterministic model, not a wire implementation; transcript binding on the wire depends on extending the Finished-message binding (K11) to cover the negotiation transcript, which is not yet designed</td><td>K28, K29, K30</td></tr>
+</table>
+<p>Full detail, impact, and concrete mitigations: <code>FINDINGS.md</code>.
+Every material claim is mapped to a runnable check or a primary-source
+citation in <code>claim_evidence_index.md</code>.</p>
+<h2>Checks</h2>
+<table>
+<tr><th>ID</th><th>Kind</th><th>Check</th><th>Result</th></tr>
+<tr><td>K01</td><td>TESTED</td><td>Pinned commit identity</td><td>PASS</td></tr>
+<tr><td>K02</td><td>TESTED</td><td>ML-KEM / Kyber absent from the pinned tree</td><td>PASS</td></tr>
+<tr><td>K03</td><td>TESTED</td><td>X25519 and application-code ECDH absent</td><td>PASS</td></tr>
+<tr><td>K04</td><td>TESTED</td><td>&#x27;encapsulat*&#x27; hits in src/ are non-KEM prose</td><td>PASS</td></tr>
+<tr><td>K05</td><td>TESTED</td><td>Signing present: ed25519 / secp256k1 only</td><td>PASS</td></tr>
+<tr><td>K06</td><td>SOURCE-DERIVED</td><td>TLS context construction is fully pinned</td><td>PASS</td></tr>
+<tr><td>K07</td><td>SOURCE-DERIVED</td><td>Peer connections use the anonymous TLS context</td><td>PASS</td></tr>
+<tr><td>K08</td><td>TESTED</td><td>No TLS group / curve / KEM configuration exists</td><td>PASS</td></tr>
+<tr><td>K09</td><td>SOURCE-DERIVED</td><td>Node identity is always secp256k1</td><td>PASS</td></tr>
+<tr><td>K10</td><td>SOURCE-DERIVED</td><td>Overlay handshake requires a secp256k1 node key</td><td>PASS</td></tr>
+<tr><td>K11</td><td>SOURCE-DERIVED</td><td>Session signature binds TLS finished messages</td><td>PASS</td></tr>
+<tr><td>K12</td><td>SOURCE-DERIVED</td><td>Validator keys come from config; no KEM section</td><td>PASS</td></tr>
+<tr><td>K13</td><td>TESTED</td><td>No KEM key storage or persistence paths in the tree</td><td>PASS</td></tr>
+<tr><td>K14</td><td>TESTED</td><td>ML-KEM-512 sizes exact (FIPS 203 Table 3)</td><td>PASS</td></tr>
+<tr><td>K15</td><td>TESTED</td><td>ML-KEM-768 sizes exact (FIPS 203 Table 3)</td><td>PASS</td></tr>
+<tr><td>K16</td><td>TESTED</td><td>ML-KEM-1024 sizes exact (FIPS 203 Table 3)</td><td>PASS</td></tr>
+<tr><td>K17</td><td>TESTED</td><td>X25519 sizes exact (RFC 7748 section 5)</td><td>PASS</td></tr>
+<tr><td>K18</td><td>TESTED</td><td>Hybrid wire overhead per parameter set</td><td>PASS</td></tr>
+<tr><td>K19</td><td>TESTED</td><td>ML-KEM keygen timing, all parameter sets</td><td>PASS</td></tr>
+<tr><td>K20</td><td>TESTED</td><td>ML-KEM encapsulation timing, all parameter sets</td><td>PASS</td></tr>
+<tr><td>K21</td><td>TESTED</td><td>ML-KEM decapsulation timing, all parameter sets</td><td>PASS</td></tr>
+<tr><td>K22</td><td>TESTED</td><td>X25519 baseline timing (classical handshake)</td><td>PASS</td></tr>
+<tr><td>K23</td><td>TESTED</td><td>Hybrid handshake total vs classical baseline</td><td>PASS</td></tr>
+<tr><td>K24</td><td>TESTED</td><td>HKDF combiner correctness and domain separation</td><td>PASS</td></tr>
+<tr><td>K25</td><td>TESTED</td><td>Impl C vs NIST ACVP known-answer vectors</td><td>PASS</td></tr>
+<tr><td>K26</td><td>TESTED</td><td>Cross-implementation agreement (A, B, C)</td><td>PASS</td></tr>
+<tr><td>K27</td><td>TESTED</td><td>Round-trip correctness, liboqs and pyca</td><td>PASS</td></tr>
+<tr><td>K28</td><td>TESTED</td><td>Negotiation matrix, exhaustive</td><td>PASS</td></tr>
+<tr><td>K29</td><td>TESTED</td><td>Downgrade detection via transcript hash</td><td>PASS</td></tr>
+<tr><td>K30</td><td>TESTED</td><td>Mismatched hybrid and classical-only outcomes</td><td>PASS</td></tr>
+<tr><td>K31</td><td>TESTED</td><td>Fresh ephemeral keys per handshake</td><td>PASS</td></tr>
+<tr><td>K32</td><td>TESTED</td><td>Key-compromise rotation maps to config-only steps</td><td>PASS</td></tr>
+<tr><td>K33</td><td>TESTED</td><td>Rollback to classical-only is policy-only</td><td>PASS</td></tr>
+</table>
+<p>Per-check outputs: <code>results/checks/</code>. Full raw log:
+<code>results/run_log.txt</code> (tail below).</p>
+<h2>Reproduction</h2>
+<pre>bash run_all.sh</pre>
+<p>Regenerates every derived output offline from the vendored fixtures,
+rebuilds this page, and verifies digests. Expected: exit 0, byte-identical
+outputs, clean git status. See <code>REPRODUCTION.md</code> for the exact
+commands and recorded results, and
+<code>results/digest_check_output.txt</code> for the raw digest-check output.
+Verify digests at any time with <code>bash verify_digests.sh --check</code>.
+Fresh-clean-setup logs (all batteries re-run) are under
+<code>results/outputs/</code>.</p>
+<h2>Run log (last 40 lines)</h2>
+<pre>
+[CHECK K31] Fresh ephemeral keys per handshake (TESTED)
+  hypothesis: One hundred hybrid handshakes generate one hundred distinct encapsulation keys and one hundred distinct shared secrets: a compromised session key exposes only that session.
+  result: PASS
+  ML-KEM-512: 100 handshakes -&gt; 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  ML-KEM-768: 100 handshakes -&gt; 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  ML-KEM-1024: 100 handshakes -&gt; 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  forward secrecy (model): keys are ephemeral per handshake, so compromise of one session key does not retroactively expose past sessions OK
+
+[CHECK K32] Key-compromise rotation maps to config-only steps (TESTED)
+  hypothesis: Every rotation step for a compromised KEM key maps to a config change, an operator action, or a restart — no step requires a code change — because keys are loaded once at startup from configuration, exactly like the existing validator keys.
+  result: PASS
+  1. Revoke the compromised KEM key in the operator&#x27;s key inventory (the key itself is never stored in the tree).
+    mechanism: operator action; anchor: no KEM key material exists in the tree (gap analysis K02/K13)
+  2. Generate a fresh ML-KEM keypair for the affected parameter set.
+    mechanism: operator action (offline); anchor: ML-KEM key generation is a library operation; no tree code involved
+  3. Publish the new encapsulation key in the operator&#x27;s peer configuration (the new [kem] config section the migration adds).
+    mechanism: config change; anchor: config sections are declared in src/xrpld/core/ConfigSections.h; validator keys already follow this pattern via [validator_token] (ConfigSections.h:96)
+  4. Restart the node so the new key is loaded at startup.
+    mechanism: restart; anchor: node identity and keys are loaded once at startup: src/xrpld/app/main/Application.cpp:1378 (nodeIdentity_ = getNodeIdentity(...))
+  5. Old sessions are unaffected: each handshake used fresh ephemeral keys, so a compromised long-term KEM key does not retroactively expose past sessions.
+    mechanism: forward secrecy (ephemeral keys); anchor: harness check K31: every handshake iteration generates fresh ephemeral keys and distinct shared secrets
+  rotation is config + restart: the new key is published in configuration and loaded at startup (Application.cpp:1378) OK
+  the tree&#x27;s existing pattern is [validator_token] (ConfigSections.h:96); the migration adds an analogous KEM key section OK
+
+[CHECK K33] Rollback to classical-only is policy-only (TESTED)
+  hypothesis: Every rollback step is a policy or config change: no tree code is removed or changed, because the tree contains no KEM code to remove (K02) and the hybrid path lives outside the pinned tree until a migration lands.
+  result: PASS
+  1. Change the local negotiation policy from require-hybrid (or prefer-hybrid) to allow-classical.
+    mechanism: policy change; anchor: policy is a local operator setting, not tree code
+  2. Peers that still offer hybrid algorithms keep negotiating hybrid; peers that do not fall back to classical X25519.
+    mechanism: negotiation model; anchor: scripts/negotiation.py negotiate(&#x27;allow-classical&#x27;, ...)
+  3. No tree code is removed or changed: the tree contains no KEM code to remove, and the hybrid code path lives outside the pinned tree until a migration lands.
+    mechanism: no code change; anchor: gap analysis K02: 0 ML-KEM files in the pinned tree
+  4. Re-enable hybrid later by reversing step 1; no key material is invalidated by the rollback.
+    mechanism: policy change; anchor: negotiation model; no persistent KEM state in the tree
+  model check: allow-classical accepts classical-only peers and still prefers hybrid when offered OK
+  rollback is reversible: re-enabling hybrid is the reverse policy change; no key material is invalidated OK
+
+checks: 33 total, 33 passed, 0 failed</pre>
+<h2>Digest check output</h2>
+<p>The raw digest-check output is <code>results/digest_check_output.txt</code>
+(all manifest files OK). It is deliberately not embedded in this page: the
+digest output is produced after this page is built, so embedding it would make
+the page lag one run behind the manifest and a fresh-copy regeneration would
+leave git status dirty whenever manifest membership changed.</p>
+<h2>Files</h2>
+<ul>
+<li><code>README.md</code> — scope, method, how to reproduce</li>
+<li><code>SCOPE_MAP.md</code> — pinned-tree audit and integration points</li>
+<li><code>FINDINGS.md</code> — prioritized findings with concrete mitigations and limitations</li>
+<li><code>claim_evidence_index.md</code> — every material claim mapped to a runnable check or a primary-source citation</li>
+<li><code>SOURCES.md</code> — primary sources and fixture provenance</li>
+<li><code>scripts/mlkem_py.py</code> — pure-Python FIPS 203 implementation (Impl C)</li>
+<li><code>scripts/negotiation.py</code> — deterministic negotiation / downgrade / rollback model</li>
+<li><code>scripts/run_checks.py</code> — the local-fixture harness (33 checks)</li>
+<li><code>fixtures/</code> — NIST ACVP vectors, FIPS 203 constants, pinned-tree audit record, negotiation matrix</li>
+<li><code>results/run_log.txt</code>, <code>results/summary.json</code>, <code>results/summary.txt</code> — harness outputs</li>
+<li><code>results/checks/</code> — per-check outputs</li>
+<li><code>results/outputs/</code> — fresh clean-setup run logs (all batteries)</li>
+<li><code>results/SHA256SUMS</code> — digest manifest</li>
+</ul>
+</body>
+</html>
