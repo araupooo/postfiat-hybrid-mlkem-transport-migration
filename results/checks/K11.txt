@@ -1,0 +1,7 @@
+[CHECK K11] Session signature binds TLS finished messages (SOURCE-DERIVED)
+  hypothesis: The shared value signed in the overlay handshake is the XOR of the SHA-512 hashes of the local and peer TLS Finished messages, halved: it proves the peer holds the node key AND that the TLS session is end-to-end with that node.
+  result: PASS
+  Handshake.cpp:146-176: makeSharedValue = sha512Half(hash(SSL_get_finished) XOR hash(SSL_get_peer_finished)) OK
+  Handshake.cpp:203-205: buildHandshake signs the shared value with the node key into the Session-Signature header OK
+  Handshake.cpp:311-319: verifyHandshake checks the signature with verifyDigest; failure -> "Failed to verify session" OK
+  consequence: this Finished-message binding is the natural anchor for a hybrid negotiation transcript (see K29): the transcript must be bound the same way OK

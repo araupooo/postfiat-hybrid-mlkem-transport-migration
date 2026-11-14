@@ -1,0 +1,9 @@
+[CHECK K23] Hybrid handshake total vs classical baseline (TESTED)
+  hypothesis: The hybrid handshake costs only a small increment over the classical handshake (well under 20x for every parameter set): the ML-KEM operations add roughly 0.04-0.09 ms on top of the X25519 baseline, and the HKDF combiner is negligible next to both.
+  result: PASS
+  ML-KEM-512 hybrid handshake ratio vs classical is under the 20x bound OK
+  ML-KEM-768 hybrid handshake ratio vs classical is under the 20x bound OK
+  ML-KEM-1024 hybrid handshake ratio vs classical is under the 20x bound OK
+  all three hybrid ratios are under the 20x bound OK
+  exact figures: results/timing_measurements.txt
+  the X25519 operations dominate the hybrid total on this machine; the ML-KEM operations add only a small increment, and the HKDF combiner is negligible next to both OK

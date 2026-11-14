@@ -1,0 +1,8 @@
+[CHECK K29] Downgrade detection via transcript hash (TESTED)
+  hypothesis: Removing a hybrid algorithm from the offered list changes the negotiation transcript hash, so a downgrade attack in transit is detectable: the peer's transcript will not match the initiator's.
+  result: PASS
+  transcript(['X25519+ML-KEM-768', 'X25519']) = e5bdd05a051a2403... OK
+  transcript(['X25519']) = d4a7173ae4e02e0c... OK
+  hashes differ: removing the hybrid offer changes the transcript OK
+  detect_downgrade flags the mismatch and accepts the matching transcript OK
+  binding note: the pinned tree already binds a session to the TLS Finished messages (K11); the negotiation transcript must be bound the same way for this detection to hold on the wire OK

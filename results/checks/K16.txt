@@ -1,0 +1,6 @@
+[CHECK K16] ML-KEM-1024 sizes exact (FIPS 203 Table 3) (TESTED)
+  hypothesis: liboqs and pyca/cryptography agree ML-KEM-1024 is ek 1568, dk 3168, ct 1568, ss 32 bytes, exactly as FIPS 203 Table 3 requires.
+  result: PASS
+  liboqs ML-KEM-1024: ek 1568, dk 3168, ct 1568, ss 32 bytes OK
+  pyca/cryptography ML-KEM-1024: ek 1568, ct 1568, ss 32 bytes; round trip OK
+  matches FIPS 203 Table 3 (category 5, ~AES-256) OK

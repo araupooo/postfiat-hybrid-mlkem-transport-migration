@@ -1,0 +1,6 @@
+[CHECK K17] X25519 sizes exact (RFC 7748 section 5) (TESTED)
+  hypothesis: X25519 public keys and shared secrets are 32 bytes each, per RFC 7748: the classical baseline the hybrid handshake must carry alongside the ML-KEM values.
+  result: PASS
+  X25519 public key: 32 bytes; shared secret: 32 bytes OK
+  Diffie-Hellman agreement: A.exchange(B) == B.exchange(A) OK
+  RFC 7748 section 5: u-coordinate and shared secret are 32-byte strings OK

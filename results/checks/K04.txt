@@ -1,0 +1,6 @@
+[CHECK K04] 'encapsulat*' hits in src/ are non-KEM prose (TESTED)
+  hypothesis: The five 'encapsulat*' matches in src/ are ordinary English ('encapsulate a test env', 'encapsulates the DER identifier'), not key encapsulation; no KeyEncapsulation symbol exists in src/.
+  result: PASS
+  grep -ril 'encapsulat' src/: 5 files, all non-KEM prose OK
+  grep -rin 'KeyEncapsulation|key_encapsulation' src/: 0 matches OK
+  no postquantum/post-quantum matches anywhere in the tree (0 files) OK

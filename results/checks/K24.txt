@@ -1,0 +1,8 @@
+[CHECK K24] HKDF combiner correctness and domain separation (TESTED)
+  hypothesis: The hybrid combiner (HKDF-SHA256 over x25519_ss || mlkem_ss) is deterministic, produces 32-byte outputs, separates domains by info string, and changes output when either input changes.
+  result: PASS
+  combine(x, m) deterministic, 32-byte output OK
+  different info string -> different output OK
+  one-bit change in either input -> different output OK
+  input order matters (x||m != m||x) OK
+  combiner construction: HKDF-SHA256, salt None, info 'pftl-hybrid-handshake-v1', input x25519_ss || mlkem_ss OK

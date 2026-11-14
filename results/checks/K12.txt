@@ -1,0 +1,7 @@
+[CHECK K12] Validator keys come from config; no KEM section (SOURCE-DERIVED)
+  hypothesis: Validator keys are loaded from the [validator_token] config section at startup; no [kem] (or any KEM) config section exists, so a KEM key has nowhere to be configured today.
+  result: PASS
+  ConfigSections.h:96: [validator_token] section defined OK
+  grep 'kem|KEM' ConfigSections.h: 0 matches — no KEM config section exists OK
+  ValidatorKeys class (ValidatorKeys.h:37): keys are loaded from config at startup, all-or-nothing OK
+  migration consequence: a KEM keypair needs a new config section (e.g. [kem_key]) following the existing validator_token pattern; rotation is then config + restart (see K32) OK

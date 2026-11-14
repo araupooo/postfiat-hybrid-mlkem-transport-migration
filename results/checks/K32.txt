@@ -1,0 +1,15 @@
+[CHECK K32] Key-compromise rotation maps to config-only steps (TESTED)
+  hypothesis: Every rotation step for a compromised KEM key maps to a config change, an operator action, or a restart — no step requires a code change — because keys are loaded once at startup from configuration, exactly like the existing validator keys.
+  result: PASS
+  1. Revoke the compromised KEM key in the operator's key inventory (the key itself is never stored in the tree).
+    mechanism: operator action; anchor: no KEM key material exists in the tree (gap analysis K02/K13)
+  2. Generate a fresh ML-KEM keypair for the affected parameter set.
+    mechanism: operator action (offline); anchor: ML-KEM key generation is a library operation; no tree code involved
+  3. Publish the new encapsulation key in the operator's peer configuration (the new [kem] config section the migration adds).
+    mechanism: config change; anchor: config sections are declared in src/xrpld/core/ConfigSections.h; validator keys already follow this pattern via [validator_token] (ConfigSections.h:96)
+  4. Restart the node so the new key is loaded at startup.
+    mechanism: restart; anchor: node identity and keys are loaded once at startup: src/xrpld/app/main/Application.cpp:1378 (nodeIdentity_ = getNodeIdentity(...))
+  5. Old sessions are unaffected: each handshake used fresh ephemeral keys, so a compromised long-term KEM key does not retroactively expose past sessions.
+    mechanism: forward secrecy (ephemeral keys); anchor: harness check K31: every handshake iteration generates fresh ephemeral keys and distinct shared secrets
+  rotation is config + restart: the new key is published in configuration and loaded at startup (Application.cpp:1378) OK
+  the tree's existing pattern is [validator_token] (ConfigSections.h:96); the migration adds an analogous KEM key section OK

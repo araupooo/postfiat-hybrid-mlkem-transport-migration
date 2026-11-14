@@ -1,0 +1,6 @@
+[CHECK K08] No TLS group / curve / KEM configuration exists (TESTED)
+  hypothesis: Nothing in the TLS setup or the overlay configures TLS groups, curves, or a KEM: there is no hook point where a hybrid group such as X25519MLKEM768 could be selected today.
+  result: PASS
+  grep for set1_groups|set1_curves|SSL_CTX_set1|TLS1_3|tlsv13|TLSv1.3|X25519MLKEM|mlkem in make_SSLContext.cpp + overlay/: 0 matches OK
+  no TLS 1.3 cipher configuration either: TLS 1.3, if negotiated, uses OpenSSL defaults, not tree settings OK
+  live re-run on this machine: 0 matches OK

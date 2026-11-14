@@ -1,0 +1,13 @@
+[CHECK K26] Cross-implementation agreement (A, B, C) (TESTED)
+  hypothesis: Ciphertexts produced by one implementation decapsulate to the same shared secret in the others, for every parameter set: liboqs and pyca/cryptography agree with the standard-derived implementation on the wire format.
+  result: PASS
+  ML-KEM-512: B.encap(C.ek) -> C.decaps = same 32-byte secret OK
+  ML-KEM-512: C.encap(B.ek) -> B.decaps = same 32-byte secret OK
+  ML-KEM-768: B.encap(C.ek) -> C.decaps = same 32-byte secret OK
+  ML-KEM-768: C.encap(B.ek) -> B.decaps = same 32-byte secret OK
+  ML-KEM-1024: B.encap(C.ek) -> C.decaps = same 32-byte secret OK
+  ML-KEM-1024: C.encap(B.ek) -> B.decaps = same 32-byte secret OK
+  ML-KEM-768: A.encap(C.ek) -> C.decaps = same 32-byte secret OK
+  ML-KEM-768: C.encap(A.ek) -> A.decaps = same 32-byte secret OK
+  ML-KEM-1024: A.encap(C.ek) -> C.decaps = same 32-byte secret OK
+  ML-KEM-1024: C.encap(A.ek) -> A.decaps = same 32-byte secret OK

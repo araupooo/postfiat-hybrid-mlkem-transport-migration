@@ -1,0 +1,6 @@
+[CHECK K15] ML-KEM-768 sizes exact (FIPS 203 Table 3) (TESTED)
+  hypothesis: liboqs and pyca/cryptography agree ML-KEM-768 is ek 1184, dk 2400, ct 1088, ss 32 bytes, exactly as FIPS 203 Table 3 requires.
+  result: PASS
+  liboqs ML-KEM-768: ek 1184, dk 2400, ct 1088, ss 32 bytes OK
+  pyca/cryptography ML-KEM-768: ek 1184, ct 1088, ss 32 bytes; round trip OK
+  matches FIPS 203 Table 3 (category 3, ~AES-192; NIST recommended default) OK

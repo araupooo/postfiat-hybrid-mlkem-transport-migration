@@ -1,0 +1,6 @@
+[CHECK K07] Peer connections use the anonymous TLS context (SOURCE-DERIVED)
+  hypothesis: OverlayImpl wires peer connections to make_SSLContext("") — the anonymous context with the ephemeral self-signed RSA certificate — and ConnectAttempt sets verify_none before the client handshake: X.509 authentication is not used on the peer path.
+  result: PASS
+  OverlayImpl.cpp:1550: setup.context = make_SSLContext("") — anonymous context OK
+  ConnectAttempt.cpp:175: verify_none; :176-183 client async_handshake OK
+  peer authentication therefore happens at the application layer (Handshake.cpp session signature), not via X.509 — the exact layer a KEM migration must integrate with OK

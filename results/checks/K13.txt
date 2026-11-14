@@ -1,0 +1,5 @@
+[CHECK K13] No KEM key storage or persistence paths in the tree (TESTED)
+  hypothesis: No file in the tree is named for a KEM, and no code path persists KEM key material: a migration introduces the first KEM key storage in the codebase, and its format is a fresh design decision.
+  result: PASS
+  find for *kem* / *.kem filenames (excl .git): 0 files OK
+  combined with K02 (0 ML-KEM files) and K04 (no KeyEncapsulation symbol): no KEM key is generated, stored, loaded, or rotated anywhere in the tree OK
