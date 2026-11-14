@@ -1,0 +1,13 @@
+[CHECK K33] Rollback to classical-only is policy-only (TESTED)
+  hypothesis: Every rollback step is a policy or config change: no tree code is removed or changed, because the tree contains no KEM code to remove (K02) and the hybrid path lives outside the pinned tree until a migration lands.
+  result: PASS
+  1. Change the local negotiation policy from require-hybrid (or prefer-hybrid) to allow-classical.
+    mechanism: policy change; anchor: policy is a local operator setting, not tree code
+  2. Peers that still offer hybrid algorithms keep negotiating hybrid; peers that do not fall back to classical X25519.
+    mechanism: negotiation model; anchor: scripts/negotiation.py negotiate('allow-classical', ...)
+  3. No tree code is removed or changed: the tree contains no KEM code to remove, and the hybrid code path lives outside the pinned tree until a migration lands.
+    mechanism: no code change; anchor: gap analysis K02: 0 ML-KEM files in the pinned tree
+  4. Re-enable hybrid later by reversing step 1; no key material is invalidated by the rollback.
+    mechanism: policy change; anchor: negotiation model; no persistent KEM state in the tree
+  model check: allow-classical accepts classical-only peers and still prefers hybrid when offered OK
+  rollback is reversible: re-enabling hybrid is the reverse policy change; no key material is invalidated OK

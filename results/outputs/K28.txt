@@ -1,0 +1,5 @@
+[CHECK K28] Negotiation matrix, exhaustive (TESTED)
+  hypothesis: The negotiation model returns exactly the expected outcome for every (policy, peer offer) combination: 3 policies x 6 offer sets = 18 cells, checked against fixtures/negotiation_matrix.json.
+  result: PASS
+  18 cells checked (3 policies x 6 offer sets), all match the expected-outcome table OK
+  require-hybrid rejects classical-only and empty offers; prefer-hybrid falls back to classical only with a downgrade event; allow-classical accepts the strongest common algorithm OK

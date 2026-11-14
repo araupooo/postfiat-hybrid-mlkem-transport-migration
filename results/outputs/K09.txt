@@ -1,0 +1,6 @@
+[CHECK K09] Node identity is always secp256k1 (SOURCE-DERIVED)
+  hypothesis: The node identity keypair is derived from the [node_seed] seed (or the wallet DB) as secp256k1, unconditionally: a migration cannot reuse the node identity as a KEM key without changing this code.
+  result: PASS
+  NodeIdentity.cpp:54-55: generateSecretKey / derivePublicKey with KeyType::secp256k1, unconditionally OK
+  seed source: [node_seed] (ConfigSections.h:63) or the wallet DB; loaded once at startup (Application.cpp:1378) OK
+  consequence: the node identity is a signing key, not a key-exchange key; a KEM keypair needs its own config section and storage OK

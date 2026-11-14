@@ -1,0 +1,12 @@
+[CHECK K25] Impl C vs NIST ACVP known-answer vectors (TESTED)
+  hypothesis: The pure-Python FIPS 203 implementation reproduces the NIST ACVP keyGen, encapsulation, and decapsulation vectors for all three parameter sets exactly, grounding every measurement in the standard itself.
+  result: PASS
+  25 keyGen cases: d,z -> ek,dk byte-identical to NIST ACVP vectors (FIPS 203) OK
+  25 encapsulation cases: (ek, m) -> (c, K) byte-identical to NIST ACVP vectors OK
+  10 decapsulation cases: (dk, c) -> K byte-identical to NIST ACVP vectors OK
+  25 keyGen cases: d,z -> ek,dk byte-identical to NIST ACVP vectors (FIPS 203) OK
+  25 encapsulation cases: (ek, m) -> (c, K) byte-identical to NIST ACVP vectors OK
+  10 decapsulation cases: (dk, c) -> K byte-identical to NIST ACVP vectors OK
+  25 keyGen cases: d,z -> ek,dk byte-identical to NIST ACVP vectors (FIPS 203) OK
+  25 encapsulation cases: (ek, m) -> (c, K) byte-identical to NIST ACVP vectors OK
+  10 decapsulation cases: (dk, c) -> K byte-identical to NIST ACVP vectors OK

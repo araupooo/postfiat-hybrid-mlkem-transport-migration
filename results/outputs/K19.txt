@@ -1,0 +1,5 @@
+[CHECK K19] ML-KEM keygen timing, all parameter sets (TESTED)
+  hypothesis: Key generation cost grows with the parameter set (512 < 768 < 1024) and stays in the sub-millisecond range on this machine.
+  result: PASS
+  ordering 512 < 768 < 1024 by median holds OK
+  exact figures: results/timing_measurements.txt

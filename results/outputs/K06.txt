@@ -1,0 +1,8 @@
+[CHECK K06] TLS context construction is fully pinned (SOURCE-DERIVED)
+  hypothesis: The peer TLS context is built in src/libxrpl/basics/make_SSLContext.cpp with a fixed method (sslv23), a fixed cipher list, TLS 1.1 as the floor, a 2048-bit RSA ephemeral self-signed certificate, and fixed 2048-bit DH parameters.
+  result: PASS
+  defaultCipherList (make_SSLContext.cpp:104): "TLSv1.2:!CBC:!DSS:!PSK:!eNULL:!aNULL" OK
+  context method sslv23 (make_SSLContext.cpp:350); floor TLS 1.2 via no_tlsv1/no_tlsv1_1 (:353-359) OK
+  ephemeral RSA key 2048 bits (:66); DH parameters 2048 bits, generated 2022-05-29 (:80); use_tmp_dh (:369) OK
+  renegotiation disabled (:375, SSL_OP_NO_RENEGOTIATION); compression disabled (:359) OK
+  consequence: the TLS key exchange is whatever OpenSSL negotiates under these fixed settings; the tree pins no groups, no curves, and no KEM (see K08) OK

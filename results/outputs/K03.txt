@@ -1,0 +1,7 @@
+[CHECK K03] X25519 and application-code ECDH absent (TESTED)
+  hypothesis: The tree has no X25519 code anywhere and no ECDH call sites in the application code: the only ECDH hits are the vendored secp256k1 library and one research document.
+  result: PASS
+  grep -ril 'x25519|X25519' whole tree (excl .git): 0 files OK
+  grep -ril 'ECDH|ecdh' src/xrpld src/test: 0 files OK
+  grep -ril 'ECDH|ecdh' whole tree: 27 files, all confined to external/secp256k1/ (26) plus one research document (docs/dynamic-unl/research/MpcTlsEvaluation.md, a 2PC handshake design note) OK
+  live re-run of the X25519 tree grep on this machine: 0 files OK

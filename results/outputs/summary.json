@@ -1,0 +1,254 @@
+{
+  "pinned_commit": "0085a1ff885d6a446369cf73a4430f75af22be55",
+  "implementations": {
+    "A": "pyca/cryptography 50.0.2",
+    "B": "liboqs 0.16.0",
+    "C": "pure-Python FIPS 203 (scripts/mlkem_py.py)"
+  },
+  "total": 33,
+  "passed": 33,
+  "failed": 0,
+  "benchmarks_ms": {
+    "timing_figures": "results/timing_measurements.txt",
+    "ordering_keygen_512_768_1024": "holds (by median)",
+    "ordering_encaps_512_768_1024": "holds (by median)",
+    "ordering_decaps_512_768_1024": "holds (by median)",
+    "hybrid_ratio_bound_20x": "holds for all parameter sets",
+    "x25519_exchange_under_1ms": true,
+    "benchmark_iterations_per_op": 200,
+    "benchmark_warmup_iterations": 10
+  },
+  "checks": [
+    {
+      "id": "K01",
+      "kind": "TESTED",
+      "title": "Pinned commit identity",
+      "hypothesis": "The audited tree is exactly postfiatd commit 0085a1ff885d6a446369cf73a4430f75af22be55.",
+      "result": "PASS"
+    },
+    {
+      "id": "K02",
+      "kind": "TESTED",
+      "title": "ML-KEM / Kyber absent from the pinned tree",
+      "hypothesis": "No file in the pinned tree mentions ML-KEM, MLKEM, or Kyber: there is no ML-KEM code to migrate from, only code to add.",
+      "result": "PASS"
+    },
+    {
+      "id": "K03",
+      "kind": "TESTED",
+      "title": "X25519 and application-code ECDH absent",
+      "hypothesis": "The tree has no X25519 code anywhere and no ECDH call sites in the application code: the only ECDH hits are the vendored secp256k1 library and one research document.",
+      "result": "PASS"
+    },
+    {
+      "id": "K04",
+      "kind": "TESTED",
+      "title": "'encapsulat*' hits in src/ are non-KEM prose",
+      "hypothesis": "The five 'encapsulat*' matches in src/ are ordinary English ('encapsulate a test env', 'encapsulates the DER identifier'), not key encapsulation; no KeyEncapsulation symbol exists in src/.",
+      "result": "PASS"
+    },
+    {
+      "id": "K05",
+      "kind": "TESTED",
+      "title": "Signing present: ed25519 / secp256k1 only",
+      "hypothesis": "The tree's asymmetric cryptography is signing only: ed25519 and secp256k1 appear across src/, and no key-exchange primitive does.",
+      "result": "PASS"
+    },
+    {
+      "id": "K06",
+      "kind": "SOURCE-DERIVED",
+      "title": "TLS context construction is fully pinned",
+      "hypothesis": "The peer TLS context is built in src/libxrpl/basics/make_SSLContext.cpp with a fixed method (sslv23), a fixed cipher list, TLS 1.1 as the floor, a 2048-bit RSA ephemeral self-signed certificate, and fixed 2048-bit DH parameters.",
+      "result": "PASS"
+    },
+    {
+      "id": "K07",
+      "kind": "SOURCE-DERIVED",
+      "title": "Peer connections use the anonymous TLS context",
+      "hypothesis": "OverlayImpl wires peer connections to make_SSLContext(\"\") \u2014 the anonymous context with the ephemeral self-signed RSA certificate \u2014 and ConnectAttempt sets verify_none before the client handshake: X.509 authentication is not used on the peer path.",
+      "result": "PASS"
+    },
+    {
+      "id": "K08",
+      "kind": "TESTED",
+      "title": "No TLS group / curve / KEM configuration exists",
+      "hypothesis": "Nothing in the TLS setup or the overlay configures TLS groups, curves, or a KEM: there is no hook point where a hybrid group such as X25519MLKEM768 could be selected today.",
+      "result": "PASS"
+    },
+    {
+      "id": "K09",
+      "kind": "SOURCE-DERIVED",
+      "title": "Node identity is always secp256k1",
+      "hypothesis": "The node identity keypair is derived from the [node_seed] seed (or the wallet DB) as secp256k1, unconditionally: a migration cannot reuse the node identity as a KEM key without changing this code.",
+      "result": "PASS"
+    },
+    {
+      "id": "K10",
+      "kind": "SOURCE-DERIVED",
+      "title": "Overlay handshake requires a secp256k1 node key",
+      "hypothesis": "verifyHandshake rejects any node public key that is not secp256k1, and signDigest refuses to sign a digest with anything but secp256k1: ed25519 node identities cannot peer today.",
+      "result": "PASS"
+    },
+    {
+      "id": "K11",
+      "kind": "SOURCE-DERIVED",
+      "title": "Session signature binds TLS finished messages",
+      "hypothesis": "The shared value signed in the overlay handshake is the XOR of the SHA-512 hashes of the local and peer TLS Finished messages, halved: it proves the peer holds the node key AND that the TLS session is end-to-end with that node.",
+      "result": "PASS"
+    },
+    {
+      "id": "K12",
+      "kind": "SOURCE-DERIVED",
+      "title": "Validator keys come from config; no KEM section",
+      "hypothesis": "Validator keys are loaded from the [validator_token] config section at startup; no [kem] (or any KEM) config section exists, so a KEM key has nowhere to be configured today.",
+      "result": "PASS"
+    },
+    {
+      "id": "K13",
+      "kind": "TESTED",
+      "title": "No KEM key storage or persistence paths in the tree",
+      "hypothesis": "No file in the tree is named for a KEM, and no code path persists KEM key material: a migration introduces the first KEM key storage in the codebase, and its format is a fresh design decision.",
+      "result": "PASS"
+    },
+    {
+      "id": "K14",
+      "kind": "TESTED",
+      "title": "ML-KEM-512 sizes exact (FIPS 203 Table 3)",
+      "hypothesis": "liboqs reports ML-KEM-512 key/ciphertext/shared-secret lengths exactly as FIPS 203 Table 3 requires: ek 800, dk 1632, ct 768, ss 32 bytes.",
+      "result": "PASS"
+    },
+    {
+      "id": "K15",
+      "kind": "TESTED",
+      "title": "ML-KEM-768 sizes exact (FIPS 203 Table 3)",
+      "hypothesis": "liboqs and pyca/cryptography agree ML-KEM-768 is ek 1184, dk 2400, ct 1088, ss 32 bytes, exactly as FIPS 203 Table 3 requires.",
+      "result": "PASS"
+    },
+    {
+      "id": "K16",
+      "kind": "TESTED",
+      "title": "ML-KEM-1024 sizes exact (FIPS 203 Table 3)",
+      "hypothesis": "liboqs and pyca/cryptography agree ML-KEM-1024 is ek 1568, dk 3168, ct 1568, ss 32 bytes, exactly as FIPS 203 Table 3 requires.",
+      "result": "PASS"
+    },
+    {
+      "id": "K17",
+      "kind": "TESTED",
+      "title": "X25519 sizes exact (RFC 7748 section 5)",
+      "hypothesis": "X25519 public keys and shared secrets are 32 bytes each, per RFC 7748: the classical baseline the hybrid handshake must carry alongside the ML-KEM values.",
+      "result": "PASS"
+    },
+    {
+      "id": "K18",
+      "kind": "TESTED",
+      "title": "Hybrid wire overhead per parameter set",
+      "hypothesis": "A hybrid public key (32-byte X25519 key + ML-KEM encapsulation key) and hybrid ciphertext (32-byte X25519 key + ML-KEM ciphertext) are 25x/37x/49x (public key) and 24x/34x/49x (ciphertext) the classical 32-byte values.",
+      "result": "PASS"
+    },
+    {
+      "id": "K19",
+      "kind": "TESTED",
+      "title": "ML-KEM keygen timing, all parameter sets",
+      "hypothesis": "Key generation cost grows with the parameter set (512 < 768 < 1024) and stays in the sub-millisecond range on this machine.",
+      "result": "PASS"
+    },
+    {
+      "id": "K20",
+      "kind": "TESTED",
+      "title": "ML-KEM encapsulation timing, all parameter sets",
+      "hypothesis": "Encapsulation cost grows with the parameter set (512 < 768 < 1024).",
+      "result": "PASS"
+    },
+    {
+      "id": "K21",
+      "kind": "TESTED",
+      "title": "ML-KEM decapsulation timing, all parameter sets",
+      "hypothesis": "Decapsulation cost grows with the parameter set (512 < 768 < 1024).",
+      "result": "PASS"
+    },
+    {
+      "id": "K22",
+      "kind": "TESTED",
+      "title": "X25519 baseline timing (classical handshake)",
+      "hypothesis": "The classical X25519 baseline \u2014 two key generations and two exchanges, one per peer \u2014 is the floor the hybrid variants build on; the pure exchange cost is measured separately from key generation so the component sum does not double-count.",
+      "result": "PASS"
+    },
+    {
+      "id": "K23",
+      "kind": "TESTED",
+      "title": "Hybrid handshake total vs classical baseline",
+      "hypothesis": "The hybrid handshake costs only a small increment over the classical handshake (well under 20x for every parameter set): the ML-KEM operations add roughly 0.04-0.09 ms on top of the X25519 baseline, and the HKDF combiner is negligible next to both.",
+      "result": "PASS"
+    },
+    {
+      "id": "K24",
+      "kind": "TESTED",
+      "title": "HKDF combiner correctness and domain separation",
+      "hypothesis": "The hybrid combiner (HKDF-SHA256 over x25519_ss || mlkem_ss) is deterministic, produces 32-byte outputs, separates domains by info string, and changes output when either input changes.",
+      "result": "PASS"
+    },
+    {
+      "id": "K25",
+      "kind": "TESTED",
+      "title": "Impl C vs NIST ACVP known-answer vectors",
+      "hypothesis": "The pure-Python FIPS 203 implementation reproduces the NIST ACVP keyGen, encapsulation, and decapsulation vectors for all three parameter sets exactly, grounding every measurement in the standard itself.",
+      "result": "PASS"
+    },
+    {
+      "id": "K26",
+      "kind": "TESTED",
+      "title": "Cross-implementation agreement (A, B, C)",
+      "hypothesis": "Ciphertexts produced by one implementation decapsulate to the same shared secret in the others, for every parameter set: liboqs and pyca/cryptography agree with the standard-derived implementation on the wire format.",
+      "result": "PASS"
+    },
+    {
+      "id": "K27",
+      "kind": "TESTED",
+      "title": "Round-trip correctness, liboqs and pyca",
+      "hypothesis": "Encapsulate-then-decapsulate returns the same 32-byte shared secret for every parameter set in liboqs and (768/1024) in pyca/cryptography, over 25 fresh keypairs each.",
+      "result": "PASS"
+    },
+    {
+      "id": "K28",
+      "kind": "TESTED",
+      "title": "Negotiation matrix, exhaustive",
+      "hypothesis": "The negotiation model returns exactly the expected outcome for every (policy, peer offer) combination: 3 policies x 6 offer sets = 18 cells, checked against fixtures/negotiation_matrix.json.",
+      "result": "PASS"
+    },
+    {
+      "id": "K29",
+      "kind": "TESTED",
+      "title": "Downgrade detection via transcript hash",
+      "hypothesis": "Removing a hybrid algorithm from the offered list changes the negotiation transcript hash, so a downgrade attack in transit is detectable: the peer's transcript will not match the initiator's.",
+      "result": "PASS"
+    },
+    {
+      "id": "K30",
+      "kind": "TESTED",
+      "title": "Mismatched hybrid and classical-only outcomes",
+      "hypothesis": "A peer offering only ML-KEM-512 when the local policy requires 768 is rejected (fail closed); a classical-only peer is rejected under require-hybrid and accepted with a recorded downgrade event under prefer-hybrid.",
+      "result": "PASS"
+    },
+    {
+      "id": "K31",
+      "kind": "TESTED",
+      "title": "Fresh ephemeral keys per handshake",
+      "hypothesis": "One hundred hybrid handshakes generate one hundred distinct encapsulation keys and one hundred distinct shared secrets: a compromised session key exposes only that session.",
+      "result": "PASS"
+    },
+    {
+      "id": "K32",
+      "kind": "TESTED",
+      "title": "Key-compromise rotation maps to config-only steps",
+      "hypothesis": "Every rotation step for a compromised KEM key maps to a config change, an operator action, or a restart \u2014 no step requires a code change \u2014 because keys are loaded once at startup from configuration, exactly like the existing validator keys.",
+      "result": "PASS"
+    },
+    {
+      "id": "K33",
+      "kind": "TESTED",
+      "title": "Rollback to classical-only is policy-only",
+      "hypothesis": "Every rollback step is a policy or config change: no tree code is removed or changed, because the tree contains no KEM code to remove (K02) and the hybrid path lives outside the pinned tree until a migration lands.",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+Hybrid ML-KEM transport migration assessment: timing figures
+pinned postfiatd commit: 0085a1ff885d6a446369cf73a4430f75af22be55
+implementations: A=pyca/cryptography 50.0.2 (OpenSSL), B=liboqs 0.16.0, C=pure-Python FIPS 203
+iterations per operation: 200 (warmup 10); all figures are medians in ms
+NOTE: figures vary run to run on a shared machine. Only the orderings (512 < 768 < 1024) and the 20x ratio bound are asserted by the checks.
+
+ML-KEM-512: keygen median 0.012 ms, encaps median 0.014 ms, decaps median 0.015 ms; hybrid handshake (component sum) 0.257 ms; ratio vs classical 1.39x; ML-KEM increment 0.042 ms
+ML-KEM-768: keygen median 0.018 ms, encaps median 0.020 ms, decaps median 0.022 ms; hybrid handshake (component sum) 0.274 ms; ratio vs classical 1.48x; ML-KEM increment 0.059 ms
+ML-KEM-1024: keygen median 0.022 ms, encaps median 0.025 ms, decaps median 0.028 ms; hybrid handshake (component sum) 0.291 ms; ratio vs classical 1.57x; ML-KEM increment 0.075 ms
+X25519: keygen median 0.042 ms, pure exchange median 0.051 ms; classical handshake (component sum) 0.185 ms
+HKDF-SHA256 combine median 0.030 ms

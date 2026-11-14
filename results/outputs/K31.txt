@@ -1,0 +1,7 @@
+[CHECK K31] Fresh ephemeral keys per handshake (TESTED)
+  hypothesis: One hundred hybrid handshakes generate one hundred distinct encapsulation keys and one hundred distinct shared secrets: a compromised session key exposes only that session.
+  result: PASS
+  ML-KEM-512: 100 handshakes -> 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  ML-KEM-768: 100 handshakes -> 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  ML-KEM-1024: 100 handshakes -> 100 distinct encapsulation keys, 100 distinct shared secrets OK
+  forward secrecy (model): keys are ephemeral per handshake, so compromise of one session key does not retroactively expose past sessions OK

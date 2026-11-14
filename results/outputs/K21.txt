@@ -1,0 +1,5 @@
+[CHECK K21] ML-KEM decapsulation timing, all parameter sets (TESTED)
+  hypothesis: Decapsulation cost grows with the parameter set (512 < 768 < 1024).
+  result: PASS
+  ordering 512 < 768 < 1024 by median holds OK
+  exact figures: results/timing_measurements.txt

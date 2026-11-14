@@ -1,0 +1,6 @@
+[CHECK K05] Signing present: ed25519 / secp256k1 only (TESTED)
+  hypothesis: The tree's asymmetric cryptography is signing only: ed25519 and secp256k1 appear across src/, and no key-exchange primitive does.
+  result: PASS
+  grep -ril 'ed25519' src/: 43 files OK
+  grep -ril 'secp256k1' src/: 54 files OK
+  signing only: src/libxrpl/protocol/PublicKey.cpp verifies ed25519 and secp256k1 signatures; no KEM, no ECDH, no X25519 in application code OK

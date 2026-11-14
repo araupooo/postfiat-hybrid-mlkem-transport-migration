@@ -1,0 +1,8 @@
+[CHECK K27] Round-trip correctness, liboqs and pyca (TESTED)
+  hypothesis: Encapsulate-then-decapsulate returns the same 32-byte shared secret for every parameter set in liboqs and (768/1024) in pyca/cryptography, over 25 fresh keypairs each.
+  result: PASS
+  ML-KEM-512: liboqs 25/25 round trips OK
+  ML-KEM-768: liboqs 25/25 round trips OK
+  ML-KEM-1024: liboqs 25/25 round trips OK
+  ML-KEM-768: pyca/cryptography 25/25 round trips OK
+  ML-KEM-1024: pyca/cryptography 25/25 round trips OK

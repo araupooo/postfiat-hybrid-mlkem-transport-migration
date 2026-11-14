@@ -1,0 +1,6 @@
+[CHECK K02] ML-KEM / Kyber absent from the pinned tree (TESTED)
+  hypothesis: No file in the pinned tree mentions ML-KEM, MLKEM, or Kyber: there is no ML-KEM code to migrate from, only code to add.
+  result: PASS
+  grep -ril 'ml-kem|mlkem|kyber' whole tree (excl .git): 0 files OK
+  grep -ril 'ml-kem|mlkem|kyber' src/: 0 files OK
+  live re-run of the tree grep on this machine: 0 files OK

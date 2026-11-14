@@ -1,0 +1,5 @@
+[CHECK K14] ML-KEM-512 sizes exact (FIPS 203 Table 3) (TESTED)
+  hypothesis: liboqs reports ML-KEM-512 key/ciphertext/shared-secret lengths exactly as FIPS 203 Table 3 requires: ek 800, dk 1632, ct 768, ss 32 bytes.
+  result: PASS
+  liboqs ML-KEM-512: ek 800, dk 1632, ct 768, ss 32 bytes OK
+  matches FIPS 203 Table 3 (category 1, ~AES-128) OK

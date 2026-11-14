@@ -1,0 +1,6 @@
+[CHECK K22] X25519 baseline timing (classical handshake) (TESTED)
+  hypothesis: The classical X25519 baseline — two key generations and two exchanges, one per peer — is the floor the hybrid variants build on; the pure exchange cost is measured separately from key generation so the component sum does not double-count.
+  result: PASS
+  classical handshake component sum (2x keygen + 2x exchange, medians) computed OK
+  X25519 exchange median under 1 ms OK
+  exact figures: results/timing_measurements.txt

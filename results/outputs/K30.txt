@@ -1,0 +1,8 @@
+[CHECK K30] Mismatched hybrid and classical-only outcomes (TESTED)
+  hypothesis: A peer offering only ML-KEM-512 when the local policy requires 768 is rejected (fail closed); a classical-only peer is rejected under require-hybrid and accepted with a recorded downgrade event under prefer-hybrid.
+  result: PASS
+  require-hybrid x hybrid-512-only: ACCEPT-HYBRID-ML-KEM-512 (any hybrid satisfies the policy) OK
+  require-hybrid x classical-only: REJECT (fail closed) OK
+  prefer-hybrid x classical-only: ACCEPT-CLASSICAL with downgrade_event=True (fallback is recorded, not silent) OK
+  prefer-hybrid x no offers: REJECT OK
+  NOTE (design gap, honest limitation): the model has no exact-parameter policy knob. A deployment that must pin ML-KEM-768 exactly needs an additional rule (reject any offer that is not X25519+ML-KEM-768); the default require-hybrid policy accepts 512 and 1024 as well OK

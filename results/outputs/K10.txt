@@ -1,0 +1,6 @@
+[CHECK K10] Overlay handshake requires a secp256k1 node key (SOURCE-DERIVED)
+  hypothesis: verifyHandshake rejects any node public key that is not secp256k1, and signDigest refuses to sign a digest with anything but secp256k1: ed25519 node identities cannot peer today.
+  result: PASS
+  Handshake.cpp:294-295: non-secp256k1 node public key -> "Unsupported public key type" OK
+  SecretKey.cpp:230-233: signDigest requires secp256k1 (secp256k1_ecdsa_sign, RFC 6979 nonce) OK
+  consequence: the session-signature binding (K11) is secp256k1-only; a hybrid handshake must either keep that binding or change both call sites OK
