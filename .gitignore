@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.pyc
+results/timing_measurements.txt
+results/outputs/timing_measurements.txt
