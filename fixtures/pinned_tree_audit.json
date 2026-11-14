@@ -1,0 +1,198 @@
+{
+  "pinned_commit": "0085a1ff885d6a446369cf73a4430f75af22be55",
+  "tree": "/home/hatch/workspace/postfiatd-amendment/worktree-0085a1ff",
+  "checks": [
+    {
+      "cmd": "git rev-parse HEAD",
+      "exit": 0,
+      "stdout": "0085a1ff885d6a446369cf73a4430f75af22be55\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "git log --oneline -1",
+      "exit": 0,
+      "stdout": "0085a1f Merge pull request #50 from postfiatorg/hotfix/upstream-hardening-1.0.9\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ml-kem\\|mlkem\\|kyber' . | grep -v '^\\./\\.git/' | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ml-kem\\|mlkem\\|kyber' src/ | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'x25519\\|X25519' . | grep -v '^\\./\\.git/' | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ECDH\\|ecdh' . | grep -v '^\\./\\.git/' | wc -l",
+      "exit": 0,
+      "stdout": "27\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ECDH\\|ecdh' . | grep -v '^\\./\\.git/'",
+      "exit": 0,
+      "stdout": "./docs/dynamic-unl/research/MpcTlsEvaluation.md\n./external/secp256k1/.cirrus.yml\n./external/secp256k1/.gitignore\n./external/secp256k1/CHANGELOG.md\n./external/secp256k1/CMakeLists.txt\n./external/secp256k1/Makefile.am\n./external/secp256k1/README.md\n./external/secp256k1/ci/ci.sh\n./external/secp256k1/configure.ac\n./external/secp256k1/doc/ellswift.md\n./external/secp256k1/examples/CMakeLists.txt\n./external/secp256k1/examples/ecdh.c\n./external/secp256k1/examples/ellswift.c\n./external/secp256k1/include/secp256k1.h\n./external/secp256k1/include/secp256k1_ecdh.h\n./external/secp256k1/include/secp256k1_ellswift.h\n./external/secp256k1/src/CMakeLists.txt\n./external/secp256k1/src/bench.c\n./external/secp256k1/src/ctime_tests.c\n./external/secp256k1/src/modules/ecdh/Makefile.am.include\n./external/secp256k1/src/modules/ecdh/bench_impl.h\n./external/secp256k1/src/modules/ecdh/main_impl.h\n./external/secp256k1/src/modules/ecdh/tests_impl.h\n./external/secp256k1/src/modules/ellswift/bench_impl.h\n./external/secp256k1/src/modules/ellswift/main_impl.h\n./external/secp256k1/src/secp256k1.c\n./external/secp256k1/src/tests.c\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ECDH\\|ecdh' src/xrpld src/test | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'post.quantum\\|postquantum' . | grep -v '^\\./\\.git/' | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'encapsulat' src/",
+      "exit": 0,
+      "stdout": "src/test/app/XChain_test.cpp\nsrc/xrpld/conditions/detail/utils.h\nsrc/xrpld/consensus/ConsensusTypes.h\nsrc/xrpld/rpc/handlers/BookOffers.cpp\nsrc/xrpld/rpc/handlers/Reservations.cpp\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rn 'encapsulat' src/ | head -8",
+      "exit": 0,
+      "stdout": "src/test/app/XChain_test.cpp:47:// SEnv class - encapsulate jtx::Env to make it more user-friendly,\nsrc/test/app/XChain_test.cpp:50:// without encapsulating it in a curly brace block.\nsrc/xrpld/conditions/detail/utils.h:42:// The preamble encapsulates the DER identifier and\nsrc/xrpld/rpc/handlers/BookOffers.cpp:41:    //             and encapsulated into a function.\nsrc/xrpld/rpc/handlers/Reservations.cpp:43:    // Returning JSON from every function ruins any attempt to encapsulate\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rin 'KeyEncapsulation\\|key_encapsulation' src/ | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'ed25519' src/ | wc -l",
+      "exit": 0,
+      "stdout": "43\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -ril 'secp256k1' src/ | wc -l",
+      "exit": 0,
+      "stdout": "54\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rn 'set1_groups\\|set1_curves\\|SSL_CTX_set1\\|TLS1_3\\|tlsv13\\|TLSv1.3\\|X25519MLKEM\\|mlkem' src/libxrpl/basics/make_SSLContext.cpp src/xrpld/overlay/ | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rln 'ssl\\|SSL' src/xrpld/overlay/",
+      "exit": 0,
+      "stdout": "src/xrpld/overlay/Overlay.h\nsrc/xrpld/overlay/README.md\nsrc/xrpld/overlay/detail/ConnectAttempt.cpp\nsrc/xrpld/overlay/detail/ConnectAttempt.h\nsrc/xrpld/overlay/detail/Handshake.cpp\nsrc/xrpld/overlay/detail/Handshake.h\nsrc/xrpld/overlay/detail/OverlayImpl.cpp\nsrc/xrpld/overlay/detail/OverlayImpl.h\nsrc/xrpld/overlay/detail/PeerImp.h\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'make_SSLContext' src/xrpld/overlay/detail/OverlayImpl.cpp",
+      "exit": 0,
+      "stdout": "38:#include <xrpl/basics/make_SSLContext.h>\n1550:        setup.context = make_SSLContext(\"\");\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'set_verify_mode\\|async_handshake' src/xrpld/overlay/detail/ConnectAttempt.cpp",
+      "exit": 0,
+      "stdout": "175:    stream_.set_verify_mode(boost::asio::ssl::verify_none);\n176:    stream_.async_handshake(\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'defaultCipherList\\|sslv23\\|no_sslv2\\|no_sslv3\\|no_tlsv1\\|no_tlsv1_1\\|single_dh_use\\|no_compression\\|use_tmp_dh\\|SSL_OP_NO_RENEGOTIATION\\|defaultRSAKeyBits\\|defaultDH\\[\\]' src/libxrpl/basics/make_SSLContext.cpp",
+      "exit": 0,
+      "stdout": "66:int defaultRSAKeyBits = 2048;\n78:          defaultRSAKeyBits accordingly.\n80:static constexpr char const defaultDH[] =\n104:std::string const defaultCipherList = \"TLSv1.2:!CBC:!DSS:!PSK:!eNULL:!aNULL\";\n120:        if (RSA_generate_key_ex(rsa, defaultRSAKeyBits, bn, nullptr) != 1)\n350:        boost::asio::ssl::context::sslv23);\n354:        boost::asio::ssl::context::no_sslv2 |\n355:        boost::asio::ssl::context::no_sslv3 |\n356:        boost::asio::ssl::context::no_tlsv1 |\n357:        boost::asio::ssl::context::no_tlsv1_1 |\n358:        boost::asio::ssl::context::single_dh_use |\n359:        boost::asio::ssl::context::no_compression);\n362:        cipherList = defaultCipherList;\n369:    c->use_tmp_dh({std::addressof(detail::defaultDH), sizeof(defaultDH)});\n375:    SSL_CTX_set_options(c->native_handle(), SSL_OP_NO_RENEGOTIATION);\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "sed -n '104p' src/libxrpl/basics/make_SSLContext.cpp",
+      "exit": 0,
+      "stdout": "std::string const defaultCipherList = \"TLSv1.2:!CBC:!DSS:!PSK:!eNULL:!aNULL\";\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "sed -n '349,360p' src/libxrpl/basics/make_SSLContext.cpp",
+      "exit": 0,
+      "stdout": "    auto c = std::make_shared<boost::asio::ssl::context>(\n        boost::asio::ssl::context::sslv23);\n\n    c->set_options(\n        boost::asio::ssl::context::default_workarounds |\n        boost::asio::ssl::context::no_sslv2 |\n        boost::asio::ssl::context::no_sslv3 |\n        boost::asio::ssl::context::no_tlsv1 |\n        boost::asio::ssl::context::no_tlsv1_1 |\n        boost::asio::ssl::context::single_dh_use |\n        boost::asio::ssl::context::no_compression);\n\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'secp256k1\\|Unsupported public key' src/xrpld/overlay/detail/Handshake.cpp",
+      "exit": 0,
+      "stdout": "294:                if (publicKeyType(*pk) != KeyType::secp256k1)\n295:                    throw std::runtime_error(\"Unsupported public key type\");\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'makeSharedValue\\|SSL_get_finished\\|SSL_get_peer_finished\\|sha512Half' src/xrpld/overlay/detail/Handshake.cpp",
+      "exit": 0,
+      "stdout": "34:// headers or something for SSL_get_finished?\n118:               - `SSL_get_finished` or\n119:               - `SSL_get_peer_finished`.\n146:makeSharedValue(stream_type& ssl, beast::Journal journal)\n148:    auto const cookie1 = hashLastMessage(ssl.native_handle(), SSL_get_finished);\n156:        hashLastMessage(ssl.native_handle(), SSL_get_peer_finished);\n174:    return sha512Half(Slice(result.data(), result.size()));\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'signDigest\\|Session-Signature' src/xrpld/overlay/detail/Handshake.cpp",
+      "exit": 0,
+      "stdout": "203:        auto const sig = signDigest(\n205:        h.insert(\"Session-Signature\", base64_encode(sig.data(), sig.size()));\n311:        auto const iter = headers.find(\"Session-Signature\");\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "sed -n '54,55p' src/xrpld/app/main/NodeIdentity.cpp",
+      "exit": 0,
+      "stdout": "        auto secretKey = generateSecretKey(KeyType::secp256k1, *seed);\n        auto publicKey = derivePublicKey(KeyType::secp256k1, secretKey);\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'SECTION_NODE_SEED\\|SECTION_VALIDATOR_TOKEN' src/xrpld/core/ConfigSections.h",
+      "exit": 0,
+      "stdout": "63:#define SECTION_NODE_SEED \"node_seed\"\n96:#define SECTION_VALIDATOR_TOKEN \"validator_token\"\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rn 'kem\\|KEM' src/xrpld/core/ConfigSections.h | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "sed -n '230,233p' src/libxrpl/protocol/SecretKey.cpp",
+      "exit": 0,
+      "stdout": "signDigest(PublicKey const& pk, SecretKey const& sk, uint256 const& digest)\n{\n    if (publicKeyType(pk.slice()) != KeyType::secp256k1)\n        LogicError(\"sign: secp256k1 required for digest signing\");\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "find . -path ./.git -prune -o -type f \\( -iname '*kem*' -o -iname '*.kem' \\) -print | wc -l",
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rn 'getNodeIdentity' src/xrpld/app/main/Application.cpp | head -3",
+      "exit": 0,
+      "stdout": "1378:    nodeIdentity_ = getNodeIdentity(*this, cmdline);\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -n 'class ValidatorKeys' -A 5 src/xrpld/app/misc/ValidatorKeys.h | head -8",
+      "exit": 0,
+      "stdout": "37:class ValidatorKeys\n38-{\n39-public:\n40-    // Group all keys in a struct. Either all keys are valid or none are.\n41-    struct Keys\n42-    {\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "grep -rin 'encapsulat' src/xrpld/consensus/ConsensusTypes.h",
+      "exit": 0,
+      "stdout": "272:/** Encapsulates the result of consensus.\n",
+      "stderr": ""
+    }
+  ]
+}
