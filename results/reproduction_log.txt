@@ -1,0 +1,38 @@
+Fresh-copy reproduction log (parent verification, independent of the pack author)
+==============================================================================
+Date: 2026-11-15 ~04:20 WIB
+Method: copied the pack to a clean directory /tmp/hybrid-parent-repro,
+initialized a git repo, committed, then ran the reproduction command.
+
+  cp -r <pack> /tmp/hybrid-parent-repro
+  cd /tmp/hybrid-parent-repro
+  git init && git add -A && git commit -m "pack copy"
+  bash run_all.sh
+
+Result:
+  exit code: 0
+  checks: 33 total, 33 passed, 0 failed
+  constants: 70/70 OK
+  verify_digests.sh: SHA256SUMS regenerated (96 files)
+  verify_digests.sh: 96 files OK, 0 failed
+  run_all.sh: OK
+  git status after the run: clean (no output)
+  diff of the fresh copy against the pack (excluding .git and the
+  regenerating timing_measurements.txt files): clean, except for the
+  .venv/ created by run_all.sh itself and __pycache__/ — both gitignored,
+  neither part of the pack.
+
+Spot checks performed by the parent on the pinned tree
+(/home/hatch/workspace/postfiatd-amendment/worktree-0085a1ff, commit
+0085a1ff885d6a446369cf73a4430f75af22be55):
+  - ConnectAttempt.cpp:175 set_verify_mode(verify_none) — confirmed
+  - make_SSLContext.cpp:104 defaultCipherList "TLSv1.2:!CBC:!DSS:!PSK:!eNULL:!aNULL" — confirmed
+  - NodeIdentity.cpp:54-55 generateSecretKey/derivePublicKey secp256k1 — confirmed
+  - Handshake.cpp:294-295 rejects non-secp256k1 node keys — confirmed
+  - SecretKey.cpp:230-233 signDigest requires secp256k1 — confirmed
+  - Live re-run of the tree greps during reproduction: 0 ML-KEM/Kyber files,
+    0 X25519 files, 0 ECDH files in src/xrpld and src/test; 43 ed25519 files.
+
+Sensitive-data scan (parent): clean. Only "PFTL" (network name, 3 occurrences)
+matches the broad scan; no task IDs, no reward values, no Task Node framing,
+no Discord content, no wallet addresses, no handles, no credentials.

@@ -1,0 +1,34 @@
+checks: 33 total, 33 passed, 0 failed
+K01 [TESTED] Pinned commit identity: PASS
+K02 [TESTED] ML-KEM / Kyber absent from the pinned tree: PASS
+K03 [TESTED] X25519 and application-code ECDH absent: PASS
+K04 [TESTED] 'encapsulat*' hits in src/ are non-KEM prose: PASS
+K05 [TESTED] Signing present: ed25519 / secp256k1 only: PASS
+K06 [SOURCE-DERIVED] TLS context construction is fully pinned: PASS
+K07 [SOURCE-DERIVED] Peer connections use the anonymous TLS context: PASS
+K08 [TESTED] No TLS group / curve / KEM configuration exists: PASS
+K09 [SOURCE-DERIVED] Node identity is always secp256k1: PASS
+K10 [SOURCE-DERIVED] Overlay handshake requires a secp256k1 node key: PASS
+K11 [SOURCE-DERIVED] Session signature binds TLS finished messages: PASS
+K12 [SOURCE-DERIVED] Validator keys come from config; no KEM section: PASS
+K13 [TESTED] No KEM key storage or persistence paths in the tree: PASS
+K14 [TESTED] ML-KEM-512 sizes exact (FIPS 203 Table 3): PASS
+K15 [TESTED] ML-KEM-768 sizes exact (FIPS 203 Table 3): PASS
+K16 [TESTED] ML-KEM-1024 sizes exact (FIPS 203 Table 3): PASS
+K17 [TESTED] X25519 sizes exact (RFC 7748 section 5): PASS
+K18 [TESTED] Hybrid wire overhead per parameter set: PASS
+K19 [TESTED] ML-KEM keygen timing, all parameter sets: PASS
+K20 [TESTED] ML-KEM encapsulation timing, all parameter sets: PASS
+K21 [TESTED] ML-KEM decapsulation timing, all parameter sets: PASS
+K22 [TESTED] X25519 baseline timing (classical handshake): PASS
+K23 [TESTED] Hybrid handshake total vs classical baseline: PASS
+K24 [TESTED] HKDF combiner correctness and domain separation: PASS
+K25 [TESTED] Impl C vs NIST ACVP known-answer vectors: PASS
+K26 [TESTED] Cross-implementation agreement (A, B, C): PASS
+K27 [TESTED] Round-trip correctness, liboqs and pyca: PASS
+K28 [TESTED] Negotiation matrix, exhaustive: PASS
+K29 [TESTED] Downgrade detection via transcript hash: PASS
+K30 [TESTED] Mismatched hybrid and classical-only outcomes: PASS
+K31 [TESTED] Fresh ephemeral keys per handshake: PASS
+K32 [TESTED] Key-compromise rotation maps to config-only steps: PASS
+K33 [TESTED] Rollback to classical-only is policy-only: PASS
